@@ -1,0 +1,8 @@
+{
+  "appService.zipIgnorePattern": [
+    "node_modules{,/**}",
+    ".vscode{,/**}"
+  ],
+  "appService.defaultWebAppToDeploy": "/subscriptions/33d0e6b7-e509-4bbd-9448-c581ccafb2a3/resourceGroups/todo-rg/providers/Microsoft.Web/sites/AndyTodo",
+  "appService.deploySubpath": ""
+}
