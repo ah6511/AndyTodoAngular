@@ -77,7 +77,7 @@ selectNodeVersion () {
       NODE_EXE=`cat "$DEPLOYMENT_TEMP/__nodeVersion.tmp"`
       exitWithMessageOnError "getting node version failed"
     fi
-
+    
     if [[ -e "$DEPLOYMENT_TEMP/__npmVersion.tmp" ]]; then
       NPM_JS_PATH=`cat "$DEPLOYMENT_TEMP/__npmVersion.tmp"`
       exitWithMessageOnError "getting npm version failed"
@@ -100,31 +100,23 @@ selectNodeVersion () {
 
 echo Handling node.js deployment.
 
-# 1. Select node version
+# 1. KuduSync
+if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
+  "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
+  exitWithMessageOnError "Kudu Sync failed"
+fi
+
+# 2. Select node version
 selectNodeVersion
 
-# 2. Install npm packages
+# 3. Install npm packages
 if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
   cd "$DEPLOYMENT_TARGET"
   echo "Running $NPM_CMD install --production"
   eval $NPM_CMD install --production
-  exitWithMessageOnError "npm install failed"
+  exitWithMessageOnError "npm failed"
   cd - > /dev/null
 fi
 
-# 3. Angular Prod Build
-if [ -e "$DEPLOYMENT_TARGET/angular.json" ]; then
-  cd "$DEPLOYMENT_TARGET"
-  echo "Building App in $DEPLOYMENT_TARGET"
-  eval $NPM_CMD run build
-  exitWithMessageOnError "npm run build failed"
-  cd - > /dev/null
-fi
-
-# 4. KuduSync
-if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
-  "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE/dist" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
-  exitWithMessageOnError "Kudu Sync failed"
-fi
 ##################################################################################################################################
 echo "Finished successfully."
