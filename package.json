@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -21,10 +21,13 @@
     "@angular/http": "^7.2.16",
     "@angular/platform-browser": "^8.2.14",
     "@angular/platform-browser-dynamic": "^8.2.14",
-    "@angular/router": "^8.2.14",
+    "@angular/compiler-cli": "^8.2.14",
     "rxjs": "^6.5.5",
     "tslib": "^1.10.0",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.10.2",
+    "@angular/router": "^8.2.14",
+    "@angular/cli": "^8.3.22",
+    "typescript": "~3.5.3"
   },
   "devDependencies": {
     "@angular/cli": "^8.3.22",
